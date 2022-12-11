@@ -81,3 +81,13 @@ exports.login_post = passport.authenticate("local", {
   failureRedirect: "/log-in",
   successRedirect: "/",
 });
+
+exports.signout_get = (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+
+    res.redirect("/");
+  });
+};
