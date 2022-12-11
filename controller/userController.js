@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
+const passport = require("passport");
 
 exports.signup_get = (req, res, next) => {
   res.render("signup", { title: "Register" });
@@ -37,10 +38,13 @@ exports.signup_post = [
       });
     }
 
-    User.find({ email: req.body.email }, (err, user) => {
+    User.findOne({ email: req.body.email }, (err, user) => {
       if (err) {
         return next(err);
       }
+
+      console.log(user);
+
       if (user) {
         return res.render("signup", {
           title: "Register User",
@@ -68,3 +72,12 @@ exports.signup_post = [
     });
   },
 ];
+
+exports.login_get = (req, res, next) => {
+  res.render("login", { title: "Login" });
+};
+
+exports.login_post = passport.authenticate("local", {
+  failureRedirect: "/log-in",
+  successRedirect: "/",
+});
