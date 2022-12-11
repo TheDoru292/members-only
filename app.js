@@ -7,6 +7,8 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const bcrypt = require("bcryptjs");
+const flash = require("connect-flash");
+require("dotenv").config();
 
 var indexRouter = require("./routes/index");
 
@@ -19,23 +21,26 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 passport.use(
-  new LocalStrategy((email, password, done) => {
-    User.findOne({ email: email }, (err, user) => {
-      if (err) {
-        return done(err);
-      }
-      if (!user) {
-        return done(null, false, { message: "Incorrect user" });
-      }
-      bcrypt.compare(password, user.password, (err, success) => {
-        if (user.password !== success) {
-          return done(err, false, { message: "Incorrect password" });
-        } else {
-          return done(null, user);
+  new LocalStrategy(
+    { usernameField: "email", passwordField: "password" },
+    function (username, password, done) {
+      User.findOne({ email: username }, (err, user) => {
+        if (err) {
+          return done(err);
         }
+        if (!user) {
+          return done(null, false, { message: "Incorrect user" });
+        }
+        bcrypt.compare(password, user.password, (err, success) => {
+          if (success) {
+            return done(null, user);
+          } else {
+            return done(err, false, { message: "Incorrect password" });
+          }
+        });
       });
-    });
-  })
+    }
+  )
 );
 
 passport.serializeUser(function (user, done) {
@@ -48,20 +53,26 @@ passport.deserializeUser(function (id, done) {
   });
 });
 
+app.use(express.static(path.join(__dirname, "public")));
+app.use(cookieParser(process.env.SECRET));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(logger("dev"));
 app.use(
   session({
-    secret: "xi2qyNwcw5UsVdwghDyR",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(flash());
+
+app.use(function (req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+});
 
 app.use("/", indexRouter);
 
