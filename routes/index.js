@@ -12,7 +12,6 @@ const user = require("../controller/userController");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  console.log(req.user);
   res.render("index", { title: "Express" });
 });
 
@@ -25,5 +24,9 @@ router.get("/log-in", user.login_get);
 router.post("/log-in", user.login_post);
 
 router.get("/sign-out", user.signout_get);
+
+router.get("/join-the-club", user.join_the_club_get);
+
+router.post("/join-the-club", user.join_the_club_post);
 
 module.exports = router;

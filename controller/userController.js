@@ -2,6 +2,7 @@ const User = require("../models/user");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
+require("dotenv").config();
 
 exports.signup_get = (req, res, next) => {
   res.render("signup", { title: "Register" });
@@ -91,3 +92,36 @@ exports.signout_get = (req, res, next) => {
     res.redirect("/");
   });
 };
+
+exports.join_the_club_get = (req, res, next) => {
+  if (req.user) {
+    return res.render("join_club", { title: "Join the club" });
+  }
+
+  res.redirect("/log-in");
+};
+
+exports.join_the_club_post = [
+  body("secret_code").trim().escape(),
+
+  (req, res, next) => {
+    if (req.body.secret_code == process.env.MEMBERSHIP_SECRET_CODE) {
+      User.findByIdAndUpdate(
+        { _id: req.user._id },
+        { status: "Member" },
+        (err) => {
+          if (err) {
+            return next(err);
+          }
+
+          res.redirect("/");
+        }
+      );
+    } else {
+      res.render("join_club", {
+        title: "Join the club",
+        error: "The secret code is wrong!",
+      });
+    }
+  },
+];
