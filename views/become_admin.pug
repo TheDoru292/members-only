@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    h2=title
+    form(action="", method="post") 
+        label(for="admin_code") Admin code:
+        input#admin_code(type="text", name="admin_code")
+        button Submit
+    if error
+        div.errors 
+            p=error

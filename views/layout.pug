@@ -10,12 +10,13 @@ html(lang="en")
         div.header
             h1 Members Only
             nav 
-                if !user
+                if !currentUser
                     a(href="log-in") Log in
                 else
-                    a(href="admin") Become an admin
                     a(href="create-post") Create post
-                    if user.status !== "Member"
+                    if currentUser.admin !== true 
+                        a(href="admin") Become an admin
+                    if currentUser.status !== "Member"
                         a(href="join-the-club") Join the club
                     a(href="sign-out") Sign out
         div.content

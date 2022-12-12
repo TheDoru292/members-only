@@ -30,4 +30,8 @@ router.get("/join-the-club", user.join_the_club_get);
 
 router.post("/join-the-club", user.join_the_club_post);
 
+router.get("/admin", user.admin_get);
+
+router.post("/admin", user.admin_post);
+
 module.exports = router;

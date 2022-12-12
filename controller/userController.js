@@ -125,3 +125,28 @@ exports.join_the_club_post = [
     }
   },
 ];
+
+exports.admin_get = (req, res, next) => {
+  res.render("become_admin", { title: "Become admin" });
+};
+
+exports.admin_post = [
+  body("admin_code").trim().escape(),
+
+  (req, res, next) => {
+    if (req.body.admin_code == process.env.ADMIN_SECRET_CODE) {
+      User.findByIdAndUpdate({ _id: req.user._id }, { admin: true }, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        res.redirect("/");
+      });
+    } else {
+      res.render("become_admin", {
+        title: "Become admin",
+        error: "The secret code is wrong!",
+      });
+    }
+  },
+];
