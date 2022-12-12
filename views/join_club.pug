@@ -1,0 +1,10 @@
+extends layout 
+
+block content
+  h2=title 
+  form(action="" method="post")
+    label(for="secret_code") Enter the secret code! 
+    input#secret_code(type="text", name="secret_code")
+    button Submit!
+  if errors 
+    p #{errors}
