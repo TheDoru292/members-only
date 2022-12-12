@@ -14,7 +14,9 @@
         <% if(locals.currentUser) { %>
         <a href="admin">Become admin</a>
         <a href="create-post">Create post</a>
+        <% if(locals.currentUser.status !== "Member") { %>
         <a href="join-the-club">Join the Club</a>
+        <% } %>
         <a href="sign-out">Sign out</a>
         <% } %>
       </nav>
