@@ -78,10 +78,18 @@ exports.login_get = (req, res, next) => {
   res.render("login", { title: "Login" });
 };
 
-exports.login_post = passport.authenticate("local", {
-  failureRedirect: "/log-in",
-  successRedirect: "/",
-});
+exports.login_post = [
+  passport.authenticate("local", {
+    failureRedirect: "/log-in",
+  }),
+  function (req, res) {
+    if (!req.query.redirect) {
+      res.redirect("/");
+    }
+
+    res.redirect(`/${req.query.redirect}`);
+  },
+];
 
 exports.signout_get = (req, res, next) => {
   req.logout(function (err) {
@@ -98,7 +106,7 @@ exports.join_the_club_get = (req, res, next) => {
     return res.render("join_club", { title: "Join the club" });
   }
 
-  res.redirect("/log-in");
+  res.redirect("/log-in?redirect=join_club");
 };
 
 exports.join_the_club_post = [
@@ -127,7 +135,11 @@ exports.join_the_club_post = [
 ];
 
 exports.admin_get = (req, res, next) => {
-  res.render("become_admin", { title: "Become admin" });
+  if (req.user) {
+    res.render("become_admin", { title: "Become admin" });
+  }
+
+  res.redirect("/log-in?redirect=become_admin");
 };
 
 exports.admin_post = [
