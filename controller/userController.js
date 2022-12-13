@@ -60,6 +60,7 @@ exports.signup_post = [
             last_name: req.body.last_name,
             email: req.body.email,
             password: hashedPassword,
+            status: "Normal",
           },
           (err) => {
             if (err) {
