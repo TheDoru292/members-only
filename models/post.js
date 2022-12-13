@@ -1,11 +1,17 @@
 const mongoose = require("mongoose");
+const { DateTime } = require("luxon");
+
 const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
   title: { type: String, required: true },
   text: { type: String, required: true },
-  timestamp: Date,
+  timestamp: { type: Date },
 });
 
-module.exports = mongoose.model("Message", PostSchema);
+PostSchema.virtual("date").get(function () {
+  return this.timestamp.toLocaleString(DateTime.DATETIME_FULL);
+});
+
+module.exports = mongoose.model("Post", PostSchema);
