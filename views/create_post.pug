@@ -1,0 +1,13 @@
+extends layout 
+
+block content 
+    h2=title
+
+    form.create-post(action="", method="post") 
+        div
+            label(for="title") Title
+            input#title(type="text", name="title" required)
+        div 
+            label(for="text") Text
+            textarea#text(name="text", cols="30", rows="10" required) 
+        button(type="submit") Submit

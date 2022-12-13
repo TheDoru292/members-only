@@ -1,4 +1,27 @@
 extends layout
 
 block content 
-    p Hi!
+    div.posts 
+        if posts
+            for post in posts
+                div.post
+                    div.post-right 
+                        if currentUser 
+                            if currentUser.status == "Member" || currentUser.admin == true
+                                p by #{post.user.full_name}
+                                p Date:
+                                span #{post.date}
+                            else 
+                                p by Anonymous
+                                p Date: N/A
+                        else 
+                            p by Anonymous
+                            p Date: N/A
+                    div.middle
+                        h3 #{post.title}
+                        span(style="white-space: pre-line") #{post.text}
+                    if currentUser 
+                        if currentUser.admin == true
+                            form(action="/delete-post", method="post")
+                                input(type="hidden", name="id" value=post._id)
+                                button Delete                        
