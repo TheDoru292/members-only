@@ -20,17 +20,65 @@ a {
   align-items: center;
 }
 
-.header h1 {
+.header, .content {
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+.header > a {
   flex-grow: 1;
+  text-decoration: none;
+  color: black;
 }
 
 .content {
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
+}
+
+.content p {
+  word-break: break-all;
+  white-space: normal;
 }
 
 nav {
   display: flex;
   gap: 10px;
+}
+
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.post-right {
+  max-width: 150px;
+}
+
+.post-right p:nth-child(2) {
+  margin-top: 5px;
+}
+
+.post {
+  display: flex;
+  gap: 25px;
+  background-color: rgb(232, 232, 232);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.footer {
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+}
+
+.middle {
+  flex-grow: 1;
 }
 
 form > div {
