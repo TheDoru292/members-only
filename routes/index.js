@@ -11,10 +11,19 @@ db.on("error", (error) => console.bind.error(error));
 const user = require("../controller/userController");
 const post = require("../controller/postController");
 
+const Post = require("../models/post");
+
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  console.log(req.user);
-  res.render("index", { title: "Express" });
+  Post.find({})
+    .populate("user")
+    .exec((err, result) => {
+      if (err) {
+        return next(err);
+      }
+
+      res.render("index", { posts: result });
+    });
 });
 
 router.get("/sign-up", user.signup_get);
@@ -38,5 +47,7 @@ router.post("/admin", user.admin_post);
 router.get("/create-post", post.create_post_get);
 
 router.post("/create-post", post.create_post);
+
+router.post("/delete-post", post.delete_post);
 
 module.exports = router;
