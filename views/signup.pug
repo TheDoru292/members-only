@@ -18,7 +18,7 @@ block content
     button Submit
   div.errors
     if errors
-        for (error in error):
+        for error in errors
           p #{error.msg}
-    else if emailError
+    if emailError
           p #{emailError}
